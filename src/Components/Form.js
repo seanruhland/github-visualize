@@ -2,22 +2,24 @@ import React, { useState } from 'react'
 import axios from 'axios'
 
 const Form = (props) => {
-  const [username, setUsername] = useState()
+  const [username, setUsername] = useState('')
 
   const handleSubmit = (event) => {
+    event.preventDefault()
+
     axios.get(`https://api.github.com/users/${username}`).then((resp) => {
-    console.log(resp.data)
-    setUsername('')
-})
+      props.onSubmit(resp.data)
+      setUsername('')
+    })
   }
 
-    return (
-    <form className='w-full max-w-sm mx-auto' onSubmit={handleSubmit}>
+  return (
+    <form onSubmit={handleSubmit} className='w-full max-w-sm mx-auto'>
       <div className='mt-10 flex'>
         <input
+          type='text'
           value={username}
           onChange={(event) => setUsername(event.target.value)}
-          type='text'
           placeholder='GitHub username'
           className='form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150'
           required
@@ -30,6 +32,7 @@ const Form = (props) => {
         </button>
       </div>
     </form>
-    )
+  )
 }
-export default Form;
+
+export default Form
